@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "CollectionViewCell.h"
 #import "View+MASAdditions.h"
+#import "CollectionViewHeader.h"
 
 static const int NUMBER_OF_COLUMN = 3;
 
@@ -18,12 +19,12 @@ static const int NUMBER_OF_COLUMN = 3;
 
 @implementation ViewController {
     UICollectionView *_collectionView;
-    NSArray<NSString*> *_sectionTitle;
+    NSArray<NSString *> *_sectionTitle;
 }
 
 - (void)loadView {
     [super loadView];
-    _sectionTitle = @[@"區塊一", @"區塊二"];
+    _sectionTitle = @[@"Section1", @"Section2"];
 }
 
 
@@ -38,6 +39,7 @@ static const int NUMBER_OF_COLUMN = 3;
     [_collectionView setDelegate:self];
     [_collectionView setDataSource:self];
     [_collectionView registerClass:[CollectionViewCell class] forCellWithReuseIdentifier:[CollectionViewCell identifier]];
+    [_collectionView registerClass:[CollectionViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:[CollectionViewHeader identifier]];
 
     [self.view addSubview:_collectionView];
 
@@ -55,7 +57,7 @@ static const int NUMBER_OF_COLUMN = 3;
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    switch (section){
+    switch (section) {
         case 0:
             return 5;
         case 1:
@@ -68,7 +70,7 @@ static const int NUMBER_OF_COLUMN = 3;
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     CollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[CollectionViewCell identifier] forIndexPath:indexPath];
 
-    switch (indexPath.section){
+    switch (indexPath.section) {
         case 0:
             break;
         case 1:
@@ -81,6 +83,13 @@ static const int NUMBER_OF_COLUMN = 3;
     return cell;
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    CollectionViewHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                                                                          withReuseIdentifier:[CollectionViewHeader identifier] forIndexPath:indexPath];
+    [headerView setHeaderTitle:_sectionTitle[(NSUInteger) indexPath.section]];
+    return headerView;
+}
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *) collectionViewLayout;
@@ -90,6 +99,15 @@ static const int NUMBER_OF_COLUMN = 3;
     CGFloat size = (collectionView.bounds.size.width - totalSpace) / NUMBER_OF_COLUMN;
 
     return CGSizeMake(size, size);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+    UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *) collectionViewLayout;
+    CGFloat totalSpace = flowLayout.sectionInset.left
+            + flowLayout.sectionInset.right
+            + (flowLayout.minimumInteritemSpacing * NUMBER_OF_COLUMN - 1);
+
+    return CGSizeMake(collectionView.bounds.size.width - totalSpace, 60);;
 }
 
 

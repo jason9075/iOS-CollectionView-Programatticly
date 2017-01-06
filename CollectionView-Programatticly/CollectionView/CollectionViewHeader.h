@@ -7,4 +7,7 @@
 #import <UIKit/UIKit.h>
 
 @interface CollectionViewHeader : UICollectionReusableView
+- (void)setHeaderTitle:(NSString *)text;
+
++ (NSString *)identifier;
 @end
