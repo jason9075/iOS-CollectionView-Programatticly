@@ -32,6 +32,7 @@ static const int NUMBER_OF_COLUMN = 3;
     [self.view setBackgroundColor:[UIColor whiteColor]];
 
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    flowLayout.sectionInset = UIEdgeInsetsMake(16, 0, 16, 0);
     _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     [_collectionView setBackgroundColor:[UIColor whiteColor]];
     [_collectionView setDelegate:self];
